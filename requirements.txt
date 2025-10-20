@@ -1,0 +1,32 @@
+# Cali Automation Project - Python Dependencies
+# Core automation and AI-powered web automation system
+
+# Web Automation
+playwright>=1.40.0
+
+# Web Framework
+fastapi>=0.100.0
+uvicorn>=0.20.0
+
+# Data Models and Validation
+pydantic>=2.0.0
+
+# Database (Optional)
+pymysql>=1.0.0
+sqlalchemy>=2.0.0
+
+# Environment Management
+python-dotenv>=1.0.0
+
+# HTTP Requests
+requests>=2.30.0
+
+# AI Integration (Optional)
+openai>=1.0.0
+
+# Development and Testing
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+
+# Optional: Enhanced MCP support
+# mcp>=1.0.0  # Uncomment if using full MCP integration
