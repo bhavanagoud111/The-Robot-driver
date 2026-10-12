@@ -196,7 +196,6 @@ class AIBrain:
                         "expected_outcome": "Navigate to product page",
                         "confidence": 0.9
                     }
-                }
                 elif "title" in goal_lower or "price" in goal_lower:
                     plan = {
                         "plan": [
