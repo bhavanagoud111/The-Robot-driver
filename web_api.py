@@ -12,6 +12,10 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from dotenv import load_dotenv
+
+# Load settings such as OPENAI_API_KEY, API_HOST and API_PORT from .env
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
