@@ -271,19 +271,20 @@ async def execute_automation_task(task_id: str, request: AutomationRequest):
             from robot_driver_complete import main as run_robot_driver
             
             # Run the actual robot driver automation. It performs a fixed task on
-            # https://books.toscrape.com/ and prints the product details to the
-            # server console; it only returns whether the task succeeded.
+            # https://books.toscrape.com/ and returns the extracted product
+            # details, or False if the task failed.
             logger.info(f"Running actual automation for task: {task_id}")
-            succeeded = await run_robot_driver()
+            product = await run_robot_driver()
             
             result = {
-                "success": succeeded,
+                "success": bool(product),
                 "message": (
-                    "Automation completed successfully (product details are printed in the server log)"
-                    if succeeded
+                    "Automation completed successfully"
+                    if product
                     else "Automation failed (see the server log for details)"
                 ),
                 "data": {
+                    **(product or {}),
                     "website": "https://books.toscrape.com/",
                     "task_name": request.task_name,
                     "automation_type": "Playwright Automation"

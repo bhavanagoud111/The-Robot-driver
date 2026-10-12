@@ -207,7 +207,12 @@ async def main():
         print(f"📝 Description: {product_description.strip()[:100]}...")
         print("=" * 60)
         
-        return True
+        # Return the extracted details (truthy) so callers such as web_api.py can use them
+        return {
+            "product_found": product_title.strip(),
+            "price": product_price.strip(),
+            "description": product_description.strip(),
+        }
         
     except Exception as e:
         print(f"❌ Task execution failed: {e}")
