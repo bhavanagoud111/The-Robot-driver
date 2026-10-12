@@ -7,6 +7,7 @@ This implements the proper AI agent architecture as specified in the requirement
 import asyncio
 import json
 import logging
+import os
 from typing import Dict, List, Any, Optional
 from playwright.async_api import async_playwright, Page, Browser
 import openai
@@ -460,7 +461,9 @@ class AIBrainMCP:
         try:
             self.playwright = await async_playwright().start()
             self.browser = await self.playwright.chromium.launch(
-                headless=False,  # Show browser window so user can see automation
+                # Show the browser window so the user can watch the automation.
+                # Set HEADLESS=true where no display is available (e.g. Docker).
+                headless=os.getenv("HEADLESS", "false").lower() == "true",
                 args=[
                     '--no-sandbox',
                     '--disable-dev-shm-usage',
