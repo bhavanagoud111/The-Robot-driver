@@ -20,8 +20,8 @@ Cali Automation is an AI-powered web automation system that can perform any task
 ### Step 1: Clone or Download the Project
 ```bash
 # If you have git:
-git clone <repository-url>
-cd cali-project
+git clone https://github.com/bhavanagoud111/The-Robot-driver.git
+cd The-Robot-driver
 
 # Or download and extract the project files to a folder
 ```
@@ -46,21 +46,17 @@ cp env.example .env
 
 ## 🚀 Running the System
 
-### Method 1: Quick Start (Recommended)
-```bash
-# Start the complete system
-python start_web_interface.py
-```
-This will start both the API server and web interface automatically.
+The API server and the web interface are separate processes. Start both:
 
-### Method 2: Manual Start
 ```bash
-# Terminal 1: Start API Server
+# Terminal 1: Start API Server (port 8000)
 python web_api.py
 
-# Terminal 2: Start Web Interface  
+# Terminal 2: Start Web Interface (port 8081)
 python start_web_interface.py
 ```
+
+`start_web_interface.py` only serves `goal_interface.html`; the page sends goals to the API server on port 8000.
 
 ## 🌐 Access Points
 
@@ -128,7 +124,12 @@ DB_NAME=cali_automation
 API_HOST=0.0.0.0
 API_PORT=8000
 WEB_PORT=8081
+
+# Optional: run the browser without a window (needed where there is no display)
+HEADLESS=false
 ```
+
+Note: `goal_interface.html` calls the API at `http://localhost:8000`, so update the URLs in that file if you change `API_PORT`.
 
 ### Website Selection Logic
 The system automatically selects the best website based on your goal:
@@ -150,7 +151,7 @@ The system automatically selects the best website based on your goal:
 pkill -f web_api.py
 pkill -f start_web_interface.py
 
-# Or use different ports
+# Or use different ports (see the note about API_PORT above)
 export API_PORT=8001
 export WEB_PORT=8082
 ```
@@ -186,7 +187,7 @@ python3 -m pip install -r requirements.txt
 
 ## 📁 Project Structure
 ```
-cali-project/
+The-Robot-driver/
 ├── web_api.py                    # Main API server
 ├── ai_brain_mcp_integration.py   # AI Brain with MCP integration
 ├── goal_interface.html           # Web interface
@@ -234,9 +235,11 @@ curl http://localhost:8081
 # Build Docker image
 docker build -t cali-automation .
 
-# Run container
-docker run -p 8000:8000 -p 8081:8081 cali-automation
+# Run container (API only; the browser runs headless inside the container)
+docker run -p 8000:8000 cali-automation
 ```
+
+The container runs `web_api.py`. To use the web interface, run `python start_web_interface.py` on the host.
 
 ## 📞 Support
 
