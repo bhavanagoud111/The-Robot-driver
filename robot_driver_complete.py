@@ -5,6 +5,7 @@ and displays the final output as specified.
 
 import asyncio
 import logging
+import os
 from playwright.async_api import async_playwright, Browser, Page, BrowserContext
 
 # Configure logging
@@ -140,7 +141,8 @@ async def main():
     print("Task: Search for a specific product and report its price")
     print("=" * 60)
     
-    robot = RobotDriver(headless=False)  # Set to True for headless mode
+    # Visible browser by default; set HEADLESS=true where no display is available (e.g. Docker)
+    robot = RobotDriver(headless=os.getenv("HEADLESS", "false").lower() == "true")
     
     try:
         # Start browser
@@ -207,7 +209,12 @@ async def main():
         print(f"📝 Description: {product_description.strip()[:100]}...")
         print("=" * 60)
         
-        return True
+        # Return the extracted details (truthy) so callers such as web_api.py can use them
+        return {
+            "product_found": product_title.strip(),
+            "price": product_price.strip(),
+            "description": product_description.strip(),
+        }
         
     except Exception as e:
         print(f"❌ Task execution failed: {e}")

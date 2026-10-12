@@ -7,10 +7,13 @@ import socketserver
 import os
 import webbrowser
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def start_web_interface():
     """Start the web interface server"""
-    port = 8081  # Use port 8081 to avoid conflicts
+    port = int(os.getenv("WEB_PORT", "8081"))  # Default to 8081 to avoid conflicts
     
     # Change to the project directory
     os.chdir(Path(__file__).parent)

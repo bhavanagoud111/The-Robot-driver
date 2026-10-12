@@ -12,6 +12,10 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from dotenv import load_dotenv
+
+# Load settings such as OPENAI_API_KEY, API_HOST and API_PORT from .env
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -266,19 +270,24 @@ async def execute_automation_task(task_id: str, request: AutomationRequest):
         try:
             from robot_driver_complete import main as run_robot_driver
             
-            # Run the actual robot driver automation
+            # Run the actual robot driver automation. It performs a fixed task on
+            # https://books.toscrape.com/ and returns the extracted product
+            # details, or False if the task failed.
             logger.info(f"Running actual automation for task: {task_id}")
+            product = await run_robot_driver()
             
-            # Execute the real automation
             result = {
-                "success": True,
-                "message": "Real automation completed successfully",
+                "success": bool(product),
+                "message": (
+                    "Automation completed successfully"
+                    if product
+                    else "Automation failed (see the server log for details)"
+                ),
                 "data": {
-                    "product_found": "A Light in the Attic",
-                    "price": "£51.77",
-                    "website": request.page_url,
+                    **(product or {}),
+                    "website": "https://books.toscrape.com/",
                     "task_name": request.task_name,
-                    "automation_type": "Real Playwright Automation"
+                    "automation_type": "Playwright Automation"
                 }
             }
             
@@ -300,7 +309,7 @@ async def execute_automation_task(task_id: str, request: AutomationRequest):
             }
         
         # Update task with results
-        task_storage[task_id]["status"] = "completed"
+        task_storage[task_id]["status"] = "completed" if result["success"] else "failed"
         task_storage[task_id]["completed_at"] = datetime.utcnow().isoformat()
         task_storage[task_id]["result_data"] = result
         
